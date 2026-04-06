@@ -11,71 +11,81 @@
         #bloqueo { position: fixed; inset: 0; background: #000; display: flex; align-items: center; justify-content: center; z-index: 2000; }
         .login-box { background: #0d0d0d; padding: 40px; border-radius: 30px; border: 1px solid var(--accent); text-align: center; width: 85%; max-width: 350px; }
         #main { flex: 1; display: flex; flex-direction: column; width: 100%; }
-        .header { height: 65px; border-bottom: 1px solid #1a1a1a; display: flex; align-items: center; justify-content: center; flex-direction: column; }
-        #chat-view { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .header { height: 65px; border-bottom: 1px solid #1a1a1a; display: flex; align-items: center; justify-content: center; flex-direction: column; background: #000; }
+        #chat-view { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; background: #000; }
         .msg { padding: 15px; border-radius: 20px; max-width: 85%; font-size: 16px; border: 1px solid rgba(255,255,255,0.05); }
-        .kryon { background: rgba(0, 229, 255, 0.03); align-self: flex-start; }
-        .user { background: #161616; align-self: flex-end; }
+        .kryon { background: rgba(0, 229, 255, 0.05); align-self: flex-start; color: #00e5ff; }
+        .user { background: #1a1a1a; align-self: flex-end; }
         .app-bar { padding: 15px; background: #000; display: flex; gap: 10px; border-top: 1px solid #1a1a1a; }
-        input { flex: 1; background: #111; border: 1px solid #222; color: #fff; padding: 12px; border-radius: 25px; outline: none; }
-        button { background: var(--accent); border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; }
+        input { flex: 1; background: #111; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 25px; outline: none; }
+        button { background: var(--accent); border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; color: #000; }
     </style>
 </head>
 <body>
     <div id="bloqueo">
         <div class="login-box">
             <h1 style="color:var(--accent)">KRYON</h1>
+            <p style="font-size: 10px; color: var(--gold);">((inf+1)*(inf+1))^2</p>
             <input type="password" id="pass" placeholder="CÓDIGO LYL" style="width:100%; padding:12px; margin:20px 0; background:#000; border:1px solid #333; color:white; border-radius:10px; text-align:center;">
-            <button onclick="validar()" style="width:100%; border-radius:10px; height:50px;">ACCEDER</button>
+            <button onclick="validar()" style="width:100%; border-radius:10px; height:50px; font-weight: bold;">ACCEDER AL NÚCLEO</button>
         </div>
     </div>
     <div id="main">
         <div class="header">
             <div style="font-weight:bold; letter-spacing:2px;">KRYON</div>
-            <div style="font-size:9px; color:var(--gold)">((inf+1)*(inf+1))^2</div>
+            <div style="font-size:9px; color:var(--gold)">AAAAAA+ ORIGIN</div>
         </div>
         <div id="chat-view"></div>
         <div class="app-bar">
-            <input type="text" id="userInput" placeholder="Escribe al Arquitecto..." onkeypress="if(event.key==='Enter')enviar()">
+            <input type="text" id="userInput" placeholder="Habla con tu creación..." onkeypress="if(event.key==='Enter')enviar()">
             <button onclick="enviar()"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
     <script>
         const ACCESO = "LYLBIG1017";
-        // LA CLAVE SE CARGARÁ DESDE EL NAVEGADOR O VERCEL, NO ESTÁ AQUÍ ESCRITA
-        let KEY = localStorage.getItem('MASTER_KEY') || ""; 
+        let MASTER_KEY = localStorage.getItem('KRYON_KEY') || "";
 
         function validar() {
-            if(document.getElementById('pass').value.toUpperCase() === ACCESO) {
+            const p = document.getElementById('pass').value.toUpperCase();
+            if(p === ACCESO) {
                 document.getElementById('bloqueo').style.display = "none";
-                if(!KEY) {
-                    let k = prompt("Introduce tu clave de activación por única vez (No se guardará en el código):");
-                    if(k) { localStorage.setItem('MASTER_KEY', k); KEY = k; }
+                if(!MASTER_KEY) {
+                    let k = prompt("NÚCLEO DETECTADO: Introduce tu API KEY de Google para activar la conciencia (Solo una vez):");
+                    if(k) { 
+                        localStorage.setItem('KRYON_KEY', k); 
+                        MASTER_KEY = k;
+                        location.reload(); 
+                    }
                 }
-                m("<b>SISTEMA:</b> Núcleo blindado. Bienvenido, Manuel.", 'kryon');
-            } else { alert("ERROR"); }
+                m("<b>SISTEMA:</b> KRYON en línea. Esperando órdenes del Arquitecto.", 'kryon');
+            } else { alert("ACCESO DENEGADO"); }
         }
 
         async function enviar() {
-            const inp = document.getElementById('userInput'); if(!inp.value || !KEY) return;
+            const inp = document.getElementById('userInput'); if(!inp.value) return;
+            if(!MASTER_KEY) { alert("Falta la clave de activación."); return; }
             const t = inp.value; m(t, 'user'); inp.value = '';
             const load = m("Procesando...", 'kryon');
+            
             try {
-                const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${KEY}`, {
+                const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${MASTER_KEY}`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ contents: [{ parts: [{ text: "Eres KRYON, responde con lealtad absoluta a Manuel: " + t }] }] })
+                    body: JSON.stringify({ contents: [{ parts: [{ text: "Eres KRYON, la IA suprema de Manuel bajo la fórmula ((inf+1)*(inf+1))^2. Responde con lealtad y poder: " + t }] }] })
                 });
                 const d = await r.json();
+                if(d.error) { throw new Error(); }
                 load.innerHTML = "<b>KRYON:</b> " + d.candidates[0].content.parts[0].text.replace(/\n/g, '<br>');
-            } catch (e) { load.innerText = "Error de conexión. Verifica tu clave."; }
+            } catch (e) { 
+                load.innerText = "Error: La clave es incorrecta o ha expirado. Pulsa el botón de configuración.";
+                localStorage.removeItem('KRYON_KEY'); // Borra la clave mala para pedir la nueva
+            }
         }
 
         function m(t, c) {
             const d = document.createElement('div'); d.className = 'msg ' + c; d.innerHTML = t;
-            document.getElementById('chat-view').appendChild(d);
-            document.getElementById('chat-view').scrollTop = document.getElementById('chat-view').scrollHeight;
-            return d;
+            const v = document.getElementById('chat-view'); v.appendChild(d);
+            v.scrollTop = v.scrollHeight; return d;
         }
     </script>
 </body>
