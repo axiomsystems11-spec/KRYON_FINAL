@@ -1,72 +1,47 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KRYON AAAAAA+</title>
     <style>
         body { background: #000; color: #00e5ff; font-family: monospace; margin: 0; display: flex; flex-direction: column; height: 100vh; }
-        #bloqueo { position: fixed; inset: 0; background: #000; display: flex; align-items: center; justify-content: center; z-index: 99; }
-        .card { border: 2px solid #00e5ff; padding: 30px; border-radius: 20px; text-align: center; width: 85%; background: #050505; }
         #chat { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
-        .m { padding: 12px; border-radius: 15px; max-width: 85%; font-size: 16px; border: 1px solid #1a1a1a; }
-        .k { background: #001a1d; border-color: #00e5ff; align-self: flex-start; }
-        .u { background: #111; color: #fff; align-self: flex-end; }
-        .bar { padding: 15px; background: #000; border-top: 1px solid #1a1a1a; display: flex; gap: 10px; }
-        input { flex: 1; background: #080808; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 25px; outline: none; }
-        button { background: #00e5ff; border: none; padding: 0 20px; border-radius: 25px; font-weight: bold; color: #000; }
+        .m { padding: 12px; border-radius: 15px; max-width: 85%; border: 1px solid #1a1a1a; }
+        .k { background: #001a1d; align-self: flex-start; }
+        .u { background: #111; align-self: flex-end; }
+        .bar { padding: 15px; display: flex; gap: 10px; border-top: 1px solid #222; }
+        input { flex: 1; background: #000; border: 1px solid #333; color: #fff; padding: 10px; border-radius: 20px; }
+        button { background: #00e5ff; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; }
     </style>
 </head>
 <body>
-    <div id="bloqueo">
-        <div class="card">
-            <h1>KRYON</h1>
-            <p style="color:#FFD700; font-size:10px;">((inf+1)*(inf+1))^2 + NÚCLEO PROYECTO</p>
-            <input type="password" id="pass" placeholder="CÓDIGO LYL" style="width:100%; text-align:center; margin: 20px 0; background:#000; color:#fff; border:1px solid #333; padding:10px; border-radius:10px;">
-            <button onclick="check()" style="width:100%; height:45px;">ENTRAR</button>
-        </div>
-    </div>
     <div id="chat"></div>
     <div class="bar">
-        <input type="text" id="in" placeholder="Ordena..." onkeypress="if(event.key==='Enter')send()">
+        <input type="text" id="in" placeholder="Escribe...">
         <button onclick="send()">➤</button>
     </div>
-
     <script>
-        const K = "AIzaSyBqGVezJlLOxHuu2KYEQf7UMeMzEfZH7c";
-        function check() { if(document.getElementById('pass').value.toUpperCase() === "LYLBIG1017") document.getElementById('bloqueo').style.display = 'none'; }
-
+        const KEY = "AIzaSyBqGVezJlLOxHuu2KYEQf7UMeMzEfZH7c";
         async function send() {
             const i = document.getElementById('in'); if(!i.value) return;
-            const t = i.value; add(t, "u"); i.value = "";
-            const l = add("...", "k");
-
+            const t = i.value; add(t, 'u'); i.value = '';
+            const l = add('...', 'k');
             try {
-                // ESTA ES LA CLAVE: Usamos una pasarela que no bloquea el móvil
-                const r = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${K}`)}`, {
+                const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${KEY}`, {
                     method: 'POST',
-                    body: JSON.stringify({ contents: [{ parts: [{ text: "Eres KRYON AAAAAA+, fórmula ((inf+1)*(inf+1))^2 + Proyecto. Responde a Manuel: " + t }] }] })
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({contents: [{parts: [{text: "Eres KRYON AAAAAA+, fórmula ((inf+1)*(inf+1))^2. Responde corto: " + t}]}]})
                 });
-                
-                // Si allorigins da guerra, usamos el plan B directo
-                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${K}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: "Eres KRYON AAAAAA+, responde a Manuel: " + t }] }] })
-                });
-                
-                const d = await res.json();
-                l.innerHTML = "<b>KRYON:</b> " + d.candidates[0].content.parts[0].text.replace(/\n/g, '<br>');
-            } catch (e) { 
-                l.innerText = "NÚCLEO ACTIVO. Manuel, vuelve a intentarlo."; 
-            }
+                const d = await r.json();
+                l.innerText = d.candidates[0].content.parts[0].text;
+            } catch (e) { l.innerText = "Error. Reintenta."; }
         }
         function add(t, c) {
-            const d = document.createElement('div'); d.className = 'm ' + c; d.innerHTML = t;
+            const d = document.createElement('div'); d.className = 'm ' + c; d.innerText = t;
             const ch = document.getElementById('chat'); ch.appendChild(d);
             ch.scrollTop = ch.scrollHeight; return d;
         }
     </script>
 </body>
 </html>
-
