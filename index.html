@@ -3,59 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KRYON - NÚCLEO GÉMINIS</title>
+    <title>KRYON - NÚCLEO ACTIVO</title>
     <style>
         :root { --bg: #131314; --panel: #1e1f20; --txt: #e3e3e3; --accent: #4285f4; }
-        body { background: var(--bg); color: var(--txt); font-family: 'Google Sans', Arial; margin: 0; display: flex; flex-direction: column; height: 100vh; }
-        .header { padding: 15px 25px; display: flex; align-items: center; justify-content: space-between; background: var(--bg); border-bottom: 1px solid #333; }
-        .header b { color: var(--accent); letter-spacing: 1px; font-size: 20px; }
-        #chat { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 20px; scroll-behavior: smooth; }
-        .msg { padding: 12px 20px; border-radius: 20px; max-width: 80%; line-height: 1.6; font-size: 16px; position: relative; animation: fadeIn 0.3s; }
-        .kryon { background: transparent; align-self: flex-start; border: 1px solid #444; border-bottom-left-radius: 4px; }
-        .user { background: var(--panel); align-self: flex-end; border-bottom-right-radius: 4px; color: #fff; }
-        .formula { font-size: 12px; color: #888; margin-top: 5px; font-style: italic; }
-        .input-area { padding: 20px; background: var(--bg); display: flex; justify-content: center; }
-        .input-container { width: 100%; max-width: 800px; background: var(--panel); border-radius: 30px; display: flex; padding: 10px 20px; align-items: center; border: 1px solid #444; }
-        input { flex: 1; background: transparent; border: none; color: white; padding: 10px; font-size: 16px; outline: none; }
-        button { background: var(--accent); border: none; color: white; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: bold; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        body { background: var(--bg); color: var(--txt); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; }
+        .header { padding: 15px 25px; background: var(--bg); border-bottom: 1px solid #333; text-align: center; }
+        .header b { color: var(--accent); font-size: 20px; letter-spacing: 2px; }
+        #chat { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .msg { padding: 12px 18px; border-radius: 18px; max-width: 85%; font-size: 16px; line-height: 1.5; animation: fadeIn 0.3s; }
+        .kryon { background: transparent; border: 1px solid #444; align-self: flex-start; }
+        .user { background: var(--panel); align-self: flex-end; color: white; }
+        .input-area { padding: 20px; display: flex; justify-content: center; background: var(--bg); }
+        .input-container { width: 100%; max-width: 800px; background: var(--panel); border-radius: 30px; display: flex; padding: 5px 15px; border: 1px solid #444; }
+        input { flex: 1; background: transparent; border: none; color: white; padding: 12px; outline: none; font-size: 16px; }
+        button { background: var(--accent); border: none; color: white; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-weight: bold; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
-    <div class="header">
-        <b>KRYON <small>AI</small></b>
-        <span style="font-size: 12px; color: #666;">FÓRMULA $((inf+1)*(inf+1))^2$ ACTIVA</span>
-    </div>
-    <div id="chat">
-        <div class="msg kryon"><b>KRYON:</b> Saludos, Arquitecto Manuel. Interfaz de alto rendimiento desplegada. ¿Qué órdenes tenemos para hoy?</div>
-    </div>
+    <div class="header"><b>KRYON ENGINE</b></div>
+    <div id="chat"><div class="msg kryon">Sistemas listos, Manuel. Introduce tu API Key para empezar.</div></div>
     <div class="input-area">
         <div class="input-container">
-            <input type="text" id="i" placeholder="Escribe aquí..." onkeypress="if(event.key==='Enter')s()">
+            <input type="password" id="key" placeholder="Pega aquí tu API Key de Google..." style="flex: 0.4; border-right: 1px solid #444; margin-right: 10px;">
+            <input type="text" id="i" placeholder="Escribe tu mensaje..." onkeypress="if(event.key==='Enter')s()">
             <button onclick="s()">➤</button>
         </div>
     </div>
+
     <script>
         async function s() {
-            let i=document.getElementById('i'); if(!i.value) return;
-            let text = i.value;
+            const key = document.getElementById('key').value;
+            const input = document.getElementById('i');
+            const text = input.value;
+            if(!text) return;
+            if(!key) { alert("¡Necesitas pegar tu API Key a la izquierda!"); return; }
+
             m(text, 'user');
-            i.value='';
-            
-            // Simulación de carga
-            let tempMsg = m("Pensando...", 'kryon');
-            
-            // AQUÍ ES DONDE CONECTAREMOS MI API PRÓXIMAMENTE
-            setTimeout(() => {
-                tempMsg.innerHTML = "<b>KRYON:</b> Recibido. Analizando '" + text + "' bajo la fórmula de potencia infinita. La respuesta está siendo procesada en el núcleo.";
-                tempMsg.innerHTML += "<div class='formula'>Cálculo: $((inf+1)*(inf+1))^2$ completado.</div>";
-            }, 800);
+            input.value = '';
+            const loading = m("KRYON está pensando...", 'kryon');
+
+            try {
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: "Eres KRYON, una IA potente. Responde a Manuel con seguridad y estilo: " + text }] }] })
+                });
+                const data = await res.json();
+                loading.innerText = data.candidates[0].content.parts[0].text;
+            } catch (e) {
+                loading.innerText = "Error: Verifica tu API Key o conexión.";
+            }
         }
         function m(t, c) {
-            let d=document.createElement('div'); d.className='msg ' + c; d.innerHTML=t;
-            let box = document.getElementById('chat');
-            box.appendChild(d);
-            box.scrollTop = box.scrollHeight;
+            const d = document.createElement('div'); d.className = 'msg ' + c; d.innerText = t;
+            const chat = document.getElementById('chat');
+            chat.appendChild(d);
+            chat.scrollTop = chat.scrollHeight;
             return d;
         }
     </script>
