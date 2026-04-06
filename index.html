@@ -31,38 +31,32 @@
         <input type="text" id="in" placeholder="Ordena al núcleo..." onkeypress="if(event.key==='Enter')send()">
         <button onclick="send()">➤</button>
     </div>
-    <script>
-        const KEY = "AIzaSyBqGVezJlLOxHuu2KYEQf7UMeMzEfZH7c";
-        function check() { if(document.getElementById('pass').value.toUpperCase() === "LYLBIG1017") document.getElementById('bloqueo').style.display = 'none'; }
-        
-        async function send() {
-            const i = document.getElementById('in'); if(!i.value) return;
-            const t = i.value; add(t, "u"); i.value = "";
-            const l = add("Conectando con el núcleo...", "k");
-            
-            try {
-                // USAMOS UN PROXY PARA SALTAR EL BLOQUEO DE GOOGLE
-                const proxy = "https://corsproxy.io/?";
-                const api = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${KEY}`;
-                
-                const r = await fetch(proxy + encodeURIComponent(api), {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: "Eres KRYON AAAAAA+, núcleo de Manuel. Responde con lealtad y poder: " + t }] }] })
-                });
-                
-                const d = await r.json();
-                l.innerHTML = "<b>KRYON:</b> " + d.candidates[0].content.parts[0].text.replace(/\n/g, '<br>');
-            } catch (e) { 
-                l.innerText = "ERROR CRÍTICO: Reintentando conexión..."; 
-                console.error(e);
-            }
-        }
-        function add(t, c) {
-            const d = document.createElement('div'); d.className = 'm ' + c; d.innerHTML = t;
-            const ch = document.getElementById('chat'); ch.appendChild(d);
-            ch.scrollTop = ch.scrollHeight; return d;
-        }
-    </script>
+   <script>
+    const MASTER = "LYLBIG1017";
+    function check() { if(document.getElementById('pass').value.toUpperCase() === MASTER) document.getElementById('bloqueo').style.display = 'none'; }
+
+    async function send() {
+        const input = document.getElementById('in'); if(!input.value) return;
+        const text = input.value; add(text, "u"); input.value = "";
+        const load = add("Conectando...", "k");
+
+        try {
+            const r = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt: text })
+            });
+            const d = await r.json();
+            load.innerHTML = "<b>KRYON:</b> " + d.text.replace(/\n/g, '<br>');
+        } catch (e) { load.innerText = "Error de conexión."; }
+    }
+    function add(t, c) {
+        const d = document.createElement('div'); d.className = 'm ' + c; d.innerHTML = t;
+        document.getElementById('chat').appendChild(d);
+        document.getElementById('chat').scrollTop = document.getElementById('chat').scrollHeight;
+        return d;
+    }
+</script>
+
 </body>
 </html>
